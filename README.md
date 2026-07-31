@@ -1,1 +1,1 @@
-# Draughts
+# Connect 4
