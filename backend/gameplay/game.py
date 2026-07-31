@@ -1,4 +1,6 @@
 
+TOKENS = {1: "꩜", 2: "⬤"}
+
 def initBoard():
     board = []
     for row in range(6):
@@ -6,13 +8,7 @@ def initBoard():
         for col in range(7):
             r.append(" ")
         board.append(r)
-    print(board)
     return board
-
-def displayBoard(board):
-    print("   0    1    2    3    4    5    6 ")
-    for row in range(6):
-        print(row, board[row])
 
 def validateMove(board, column):
     row = 5
@@ -22,24 +18,19 @@ def validateMove(board, column):
         row -= 1
     return -1
 
-def getMove(board):
-    column = int(input("Enter column to drop token into: "))
-    row = int(validateMove(board, column))
-    while row == -1:
-        column = int(input("Enter column to drop token into: "))
-        row = int(validateMove(board, column))
-    return(row, column)
+def makeMove(board, row, column, turn):
+    board[row][column] = TOKENS[turn]
 
-def makeMove(board, row, column, turn, tokens):
-    board[row][column] = tokens[turn]
+def undoMove(board, row, column):
+    board[row][column] = " "
 
-def consecutiveRun(sequence, turn, tokens):
+def consecutiveRun(sequence, turn):
     count = 0
     i = 0
     while i < len(sequence):
         if count == 4:
             return True
-        if sequence[i] == tokens[turn]:
+        if sequence[i] == TOKENS[turn]:
             count += 1
             if count == 4:
                 return True
@@ -49,70 +40,37 @@ def consecutiveRun(sequence, turn, tokens):
     return False
     
 
-def checkWin(board, row, column, turn, tokens):
-    # check diagonally
-    diag1, diag2 = [], []
-    i, j = row, column
-
-    while i != 5 and j != 6:
-        i += 1
-        j += 1
+def checkWin(board, row, column, turn):
     
-    while i >= 0 and j >= 0:
-        
-        diag1.append(board[i][j])
-        i -= 1
-        j -= 1
+    # check diagonally
+    ranges = [[[5,6,1,1], [0,0,-1,-1]], [[0,6,-1,1], [5,0,1,-1]]]
 
-    i,j = row, column
+    for i in range(2):
+        r,c, sequence = row, column, []
+        indices = ranges[i]
 
-    while i != 0 and j != 6:
-            i -= 1
-            j += 1
-        
-    while i <= 5 and j >= 0:
-        diag2.append(board[i][j])
-        i += 1
-        j -= 1
+        while r != indices[0][0] and c != indices[0][1]:
+            r += indices[0][2]
+            c += indices[0][3]
 
-    if consecutiveRun(diag1, turn, tokens) or consecutiveRun(diag2, turn, tokens): 
-        return True 
+        while r != indices[1][0] and c != indices[1][1]:
+            sequence.append(board[r][c])
+            r += indices[1][2]
+            c += indices[1][3]
+        sequence.append(board[r][c])  
+
+        if consecutiveRun(sequence, turn):
+            return True
 
     # check horizontally
-    if consecutiveRun(board[row], turn, tokens): 
+    if consecutiveRun(board[row], turn): 
         return True
 
     # check vertically
     col = []
     for i in range(6):
         col.append(board[i][column])
-    if consecutiveRun(col, turn, tokens):
+    if consecutiveRun(col, turn):
         return True
     
     return False
-
-def playGame():
-    
-    tokens = {1: "꩜", 2: "⬤"}
-    turn = 1
-    gameOver = False
-
-    board = initBoard()
-    displayBoard(board)
-    while not gameOver:
-        print(tokens[turn] + "'s turn")
-        row, column =  getMove(board)
-        makeMove(board, row, column, turn, tokens)
-        displayBoard(board)
-        if checkWin(board, row, column, turn, tokens):
-            print("Player", turn, "wins!")
-            gameOver = True
-            return
-        if turn == 1:
-            turn = 2
-        else:
-            turn = 1
-
-
-playGame()
-
