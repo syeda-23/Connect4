@@ -1,5 +1,5 @@
 from game import initBoard, validateMove, makeMove, checkWin, TOKENS
-from minimax import playMinimax, calculateMoves, randomMove
+from minimax import calculateMoves, randomMove, makeMinimaxMove
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -15,6 +15,7 @@ def getMove(board):
     return(row, column)
 
 def Menu():
+    print(" ______                                __   _____\n|      |.-----.-----.-----.-----.----.|  |_|  |  | \n|______||_____|__|__|__|__|_____|____||____|  |__| ")
     mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against AI opponent\nEnter choice: ")
     if mode == "1":
         playMultiplayer()
@@ -23,6 +24,8 @@ def Menu():
     if mode == "3":
         playMinimax()
 
+def userPlay():
+    pass
     
 def playMultiplayer(): 
     turn = 1
@@ -66,6 +69,35 @@ def playRandomly():
             turn = 2
         elif turn == 2:
             randomMove(board, turn)
+            displayBoard(board)
+            turn = 1
+
+        if checkWin(board, row, column, turn):
+            print("Player", turn, "wins!")
+            return
+
+        elif count == 42:
+            print("Draw - Game Over!")
+            return 
+
+def playMinimax():
+    print("Minimax")
+
+    turn = 1
+    count = 0
+    board = initBoard()
+    displayBoard(board)
+
+    while True:
+        if turn == 1:
+            print("\n" + TOKENS[turn] + "'s turn")
+            row, column =  getMove(board)
+            makeMove(board, row, column, turn)
+            count += 1
+            displayBoard(board)
+            turn = 2
+        elif turn == 2:
+            makeMinimaxMove(board, 2, turn)
             displayBoard(board)
             turn = 1
 
