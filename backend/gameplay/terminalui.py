@@ -93,21 +93,22 @@ def playMinimax():
             print("\n" + TOKENS[turn] + "'s turn")
             row, column =  getMove(board)
             makeMove(board, row, column, turn)
-            count += 1
-            displayBoard(board)
-            turn = 2
         elif turn == 2:
-            makeMinimaxMove(board, 2, turn)
-            displayBoard(board)
-            turn = 1
+            row, column = makeMinimaxMove(board, 2, turn)
 
+        count += 1
+        displayBoard(board)
         if checkWin(board, row, column, turn):
             print("Player", turn, "wins!")
             return
-
         elif count == 42:
-            print("Draw - Game Over!")
-            return 
+            print("DRAW - Game Over!!")
+            return
+
+        if turn == 1:
+            turn = 2
+        else:
+            turn = 1
 
 if __name__ == "__main__":
     Menu()

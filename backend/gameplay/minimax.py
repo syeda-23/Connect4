@@ -1,5 +1,11 @@
-from game import initBoard, validateMove, makeMove, checkWin, undoMove, TOKENS
+from game import initBoard, validateMove, makeMove, checkWin, undoMove,TOKENS
 import random
+
+def showBoard(board):
+    print("   0    1    2    3    4    5    6 ")
+    for row in range(6):
+        print(row, board[row])
+        
 
 def boardFull(board):
     if len(calculateMoves(board)) == 0:
@@ -46,6 +52,7 @@ def minimax(board, depth, isMaximising, turn):
             else:
                 weight =  minimax(board, depth -1, False, opponent)[0]
                 undoMove(board, row, column)
+                
             if weight > bestWeight:
                 bestWeight = weight
                 bestMoves = [[row, column]]
@@ -97,7 +104,7 @@ def makeMinimaxMove(board, depth, turn):
     move = random.choice(croves)
     print("MOVE", move)
     makeMove(board, move[0], move[1], turn)
-    return 
+    return move[0], move[1]
 
 '''
 function minimax(node, depth, maximizingPlayer) is
