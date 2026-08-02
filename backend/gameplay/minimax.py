@@ -2,11 +2,9 @@ from game import initBoard, validateMove, makeMove, checkWin, undoMove, TOKENS
 import random
 
 def boardFull(board):
-    for row in range(6):
-        for column in range(7):
-            if board[row][column] == " ":
-                return False
-    return True
+    if len(calculateMoves(board)) == 0:
+        return True
+    return False
 
 def calculateMoves(board):
     moves = []
@@ -25,44 +23,55 @@ def randomMove(board, turn):
     return 
 
 def minimax(board, depth, isMaximising, turn):
-    print("minimax called with depth:", depth, "isMaximising:", isMaximising, "turn:", turn)
+    #print("minimax called with depth:", depth, "isMaximising:", isMaximising, "turn:", turn)
 
     if depth == 0 or boardFull(board):
         return evaluateBoard(board), None
 
     possibleMoves = calculateMoves(board)
     bestMoves= []
+    if turn == 1:
+        opponent = 2
+    else:
+        opponent = 1
 
     if isMaximising:
-        print("minimax: isMaximising is true")
         bestWeight = float("-inf")
         for move in possibleMoves:
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
-            weight =  minimax(board, depth -1, False, 1)[0]
-            undoMove(board, row, column)
+            if checkWin(board, row, column, turn):
+                undoMove(board, row, column)
+                weight = 100000 + depth
+            else:
+                weight =  minimax(board, depth -1, False, opponent)[0]
+                undoMove(board, row, column)
             if weight > bestWeight:
                 bestWeight = weight
                 bestMoves = [[row, column]]
             elif weight == bestWeight:
                 bestMoves.append([row, column])
             
-        return weight, bestMoves
+        return bestWeight, bestMoves
 
     else:
         bestWeight = float("inf")
         for move in possibleMoves:
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
-            weight = minimax(board, depth -1, True, 2)[0]
-            undoMove(board, row, column)
+            if checkWin(board, row, column, turn):
+                undoMove(board, row, column)
+                weight = -100000 - depth
+            else:
+                weight = minimax(board, depth -1, True, opponent)[0]
+                undoMove(board, row, column)
             if weight < bestWeight:
                 bestWeight = weight
                 bestMoves = [[row, column]]
             elif weight == bestWeight:
                 bestMoves.append([row, column])
 
-        return weight, bestMoves
+        return bestWeight, bestMoves
 
 def evaluateBoard(board):
     weights = {"꩜":-1, "⬤":1}
