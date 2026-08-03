@@ -1,5 +1,5 @@
 from game import initBoard, validateMove, makeMove, checkWin, TOKENS
-from minimax import calculateMoves, randomMove, makeMinimaxMove
+from minimax import calculateMoves, randomMove, makeMinimaxMove, alphabeta
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -15,7 +15,6 @@ def getMove(board):
     return(row, column)
 
 def Menu():
-    print(" ______                                __   _____\n|      |.-----.-----.-----.-----.----.|  |_|  |  | \n|______||_____|__|__|__|__|_____|____||____|  |__| ")
     mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against AI opponent\nEnter choice: ")
     if mode == "1":
         playMultiplayer()
@@ -94,7 +93,7 @@ def playMinimax():
             row, column =  getMove(board)
             makeMove(board, row, column, turn)
         elif turn == 2:
-            row, column = makeMinimaxMove(board, 2, turn)
+            row, column = makeMinimaxMove(board, 3, turn, True)
 
         count += 1
         displayBoard(board)

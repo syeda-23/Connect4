@@ -28,13 +28,15 @@ def randomMove(board, turn):
     makeMove(board, row, column, turn)
     return 
 
-def minimax(board, depth, isMaximising, turn):
-    #print("minimax called with depth:", depth, "isMaximising:", isMaximising, "turn:", turn)
+def minimax(board, depth, isMaximising, turn, nodesExplored):
 
+    print("\n minimax(", depth, "," ,isMaximising, ",", turn, ")")
     if depth == 0 or boardFull(board):
-        return evaluateBoard(board), None
+        print("Max depth reached at score:", evaluateBoard(board))
+        return evaluateBoard(board), None, nodesExplored
 
     possibleMoves = calculateMoves(board)
+    print("Possible Moves:", possibleMoves)
     bestMoves= []
     if turn == 1:
         opponent = 2
@@ -44,13 +46,16 @@ def minimax(board, depth, isMaximising, turn):
     if isMaximising:
         bestWeight = float("-inf")
         for move in possibleMoves:
+            print("Checking", move)
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
+            nodesExplored += 1
             if checkWin(board, row, column, turn):
-                undoMove(board, row, column)
+                print("Win for player", turn, "at depth", depth, "detected")
                 weight = 100000 + depth
+                undoMove(board, row, column)
             else:
-                weight =  minimax(board, depth -1, False, opponent)[0]
+                weight, score, nodesExplored =  minimax(board, depth -1, False, opponent, nodesExplored)
                 undoMove(board, row, column)
                 
             if weight > bestWeight:
@@ -58,19 +63,26 @@ def minimax(board, depth, isMaximising, turn):
                 bestMoves = [[row, column]]
             elif weight == bestWeight:
                 bestMoves.append([row, column])
+
+        print("Returning moves", bestMoves, "score", bestWeight)
+        
             
-        return bestWeight, bestMoves
+        return bestWeight, bestMoves, nodesExplored
 
     else:
         bestWeight = float("inf")
         for move in possibleMoves:
+            print("Checking", move)
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
+            nodesExplored += 1
             if checkWin(board, row, column, turn):
-                undoMove(board, row, column)
+                print("Win for player", turn, "at depth", depth, "detected")
+                      
                 weight = -100000 - depth
+                undoMove(board, row, column)
             else:
-                weight = minimax(board, depth -1, True, opponent)[0]
+                weight, score, nodesExplored = minimax(board, depth -1, True, opponent, nodesExplored)
                 undoMove(board, row, column)
             if weight < bestWeight:
                 bestWeight = weight
@@ -78,7 +90,82 @@ def minimax(board, depth, isMaximising, turn):
             elif weight == bestWeight:
                 bestMoves.append([row, column])
 
-        return bestWeight, bestMoves
+        print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
+
+        return bestWeight, bestMoves, nodesExplored
+
+def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
+
+    if depth == 0 or boardFull(board):
+        return evaluateBoard(board), None, nodesExplored
+        
+    possibleMoves = calculateMoves(board)
+    print("Possible Moves:", possibleMoves)
+    bestMoves= []
+    if turn == 1:
+        opponent = 2
+    else:
+        opponent = 1
+
+    if isMaximising:
+            bestWeight = float("-inf")
+            for move in possibleMoves:
+                print("Checking", move)
+                row, column = move[0], move[1]
+                makeMove(board, row, column, turn)
+                nodesExplored += 1
+                if checkWin(board, row, column, turn):
+                    print("Win for player", turn, "at depth", depth, "detected")
+                    weight = 100000 + depth
+                    undoMove(board, row, column)
+                else:
+                    weight , score, nodesExplored =  alphabeta(board, depth -1, False, opponent, alpha, beta, nodesExplored)
+                    undoMove(board, row, column)
+                    
+                if weight > bestWeight:
+                    bestWeight = weight
+                    bestMoves = [[row, column]]
+                elif weight == bestWeight:
+                    bestMoves.append([row, column])
+
+                if bestWeight >= beta:
+                    break
+                alpha = max(alpha, bestWeight)
+
+            print("Returning moves", bestMoves, "score", bestWeight)
+             
+            return bestWeight, bestMoves, nodesExplored
+    
+    else:
+        bestWeight = float("inf")
+        for move in possibleMoves:
+            print("Checking", move)
+            row, column = move[0], move[1]
+            makeMove(board, row, column, turn)
+            nodesExplored += 1
+            if checkWin(board, row, column, turn):
+                print("Win for player", turn, "at depth", depth, "detected")
+                        
+                weight = -100000 - depth
+                undoMove(board, row, column)
+            else:
+                weight , score, nodesExplored = alphabeta(board, depth -1, True, opponent, alpha, beta, nodesExplored)
+                undoMove(board, row, column)
+            if weight < bestWeight:
+                bestWeight = weight
+                bestMoves = [[row, column]]
+            elif weight == bestWeight:
+                bestMoves.append([row, column])
+
+            if bestWeight <= alpha:
+                break
+            beta = min(beta, bestWeight)
+
+        print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
+
+        return bestWeight, bestMoves, nodesExplored
+    
+    
 
 def evaluateBoard(board):
     weights = {"꩜":-1, "⬤":1}
@@ -97,27 +184,13 @@ def evaluateBoard(board):
 
     return score
 
+def makeMinimaxMove(board, depth, turn, pruning):
+    if not pruning:
+        moves, score, nodesExplored = minimax(board, depth, True, 2, 0)
+    else:
+        moves, score, nodesExplored = alphabeta(board, depth, True, 2, float("-inf"), float("inf"), 0)[1]
 
-def makeMinimaxMove(board, depth, turn):
-    moves, croves = minimax(board, depth, True, 2)
-    print(moves, croves)
-    move = random.choice(croves)
-    print("MOVE", move)
+    print("Nodes explored:", nodesExplored)
+    move = random.choice(moves)
     makeMove(board, move[0], move[1], turn)
     return move[0], move[1]
-
-'''
-function minimax(node, depth, maximizingPlayer) is
-    if depth = 0 or node is a terminal node then
-        return the heuristic value of node
-    if maximizingPlayer then
-        value := −∞
-        for each child of node do
-            value := max(value, minimax(child, depth − 1, FALSE))
-        return value
-    else (* minimizing player *)
-        value := +∞
-        for each child of node do
-            value := min(value, minimax(child, depth − 1, TRUE))
-        return value
-'''
