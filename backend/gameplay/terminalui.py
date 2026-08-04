@@ -15,13 +15,16 @@ def getMove(board):
     return(row, column)
 
 def Menu():
-    mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against AI opponent\nEnter choice: ")
+    mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against minimax\n4. Play against MCTS\nEnter choice: ")
     if mode == "1":
         playMultiplayer()
     if mode == "2":
         playRandomly()
     if mode == "3":
-        playMinimax()
+        depth = int("Enter depth for minimax to use: ")
+        playMinimax(depth)
+    if mode == "4":
+        playMCTS()
 
 def userPlay():
     pass
@@ -79,7 +82,7 @@ def playRandomly():
             print("Draw - Game Over!")
             return 
 
-def playMinimax():
+def playMinimax(depth):
     print("Minimax")
 
     turn = 1
@@ -93,7 +96,7 @@ def playMinimax():
             row, column =  getMove(board)
             makeMove(board, row, column, turn)
         elif turn == 2:
-            row, column = makeMinimaxMove(board, 3, turn, True)
+            row, column = makeMinimaxMove(board, depth, turn, True)
 
         count += 1
         displayBoard(board)
