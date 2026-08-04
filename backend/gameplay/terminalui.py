@@ -21,7 +21,7 @@ def Menu():
     if mode == "2":
         playRandomly()
     if mode == "3":
-        depth = int("Enter depth for minimax to use: ")
+        depth = int(input("Enter depth for minimax to use: "))
         playMinimax(depth)
     if mode == "4":
         playMCTS()
@@ -83,7 +83,6 @@ def playRandomly():
             return 
 
 def playMinimax(depth):
-    print("Minimax")
 
     turn = 1
     count = 0
@@ -111,6 +110,10 @@ def playMinimax(depth):
             turn = 2
         else:
             turn = 1
+
+def playMCTS():
+    print("MCTS")
+
 
 if __name__ == "__main__":
     Menu()

@@ -161,7 +161,7 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
                 break
             beta = min(beta, bestWeight)
 
-        print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
+        #print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
 
         return bestWeight, bestMoves, nodesExplored
     
@@ -188,9 +188,9 @@ def makeMinimaxMove(board, depth, turn, pruning):
     if not pruning:
         moves, score, nodesExplored = minimax(board, depth, True, 2, 0)
     else:
-        moves, score, nodesExplored = alphabeta(board, depth, True, 2, float("-inf"), float("inf"), 0)[1]
+        score, moves, nodesExplored = alphabeta(board, depth, True, 2, float("-inf"), float("inf"), 0)
 
-    print("Nodes explored:", nodesExplored)
+    #print("Nodes explored:", nodesExplored)
     move = random.choice(moves)
     makeMove(board, move[0], move[1], turn)
     return move[0], move[1]
