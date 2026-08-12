@@ -1,5 +1,6 @@
 from game import initBoard, validateMove, makeMove, checkWin, TOKENS
 from minimax import calculateMoves, randomMove, makeMinimaxMove, alphabeta
+from mcts2 import mcts
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -113,6 +114,32 @@ def playMinimax(depth):
 
 def playMCTS():
     print("MCTS")
+    turn = 1
+    count = 0
+    board = initBoard()
+    displayBoard(board)
+
+    while True:
+        if turn == 1:
+            print("\n" + TOKENS[turn] + "'s turn")
+            row, column =  getMove(board)
+            makeMove(board, row, column, turn)
+        elif turn == 2:
+            mcts(board, 100, turn)
+
+        count += 1
+        displayBoard(board)
+        if checkWin(board, row, column, turn):
+            print("Player", turn, "wins!")
+            return
+        elif count == 42:
+            print("DRAW - Game Over!!")
+            return
+
+        if turn == 1:
+            turn = 2
+        else:
+            turn = 1
 
 
 if __name__ == "__main__":

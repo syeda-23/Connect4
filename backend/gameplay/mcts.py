@@ -1,97 +1,110 @@
 from minimax import calculateMoves
 from Node import Node
 import math
+import random
+from game import makeMove, undoMove, checkWin, TOKENS, OPPONENTS
 
-def mcts2(root):
-    while count <= simulations:
-        child = traverse(root)
-        weight = expand(child)
-        backpropagate(child, weight)
-    return bestMove(root)
-
-def mcts(board, turn, simulations, count = 0):
-    if turn == 1:
-        opponent = 2
-    else:
-        opponent = 1
-
+def mcts(board, rollouts, turn):
+    global_turn = turn
     root = Node(board, turn)
 
-    while count <= simulations:
-        if not node.children:
+    for r in range(rollouts):
+        if root.children and not root.unvisitedMoves:
+            node = select(root)
+        else:
+            node = root
 
-            moves = calculateMoves(board)
-            for move in moves:
-                board = makeMove(move[0], move[1])
-                child = Node(board, opponent, root, move)
-                root.children.append(child)
-                undoMove(move[0], moves[1])
+        child = expand(board, node, node.turn)
+        score, next_turn = simulate(board, child, child.turn, global_turn)
+        backpropagate(score, child)
 
-        child = select(root)
-        expand(child)
-
-    return bestMove(root)
+    row, column = bestMove(root)
+    makeMove(board, row, column, turn)
+    return
 
 def select(root):
-    ## root.children might be empty!?
-    ## child here is an OBJECT - where has this been declared though??
-    best = 0 
-    selection = None
-    for child in root.children:
-        if uct(child) > best:
-            max = uct(child)
-            selection = child
+    while root.children and not root.unvisitedMoves:
 
-    return selection
+        bestUCT = float("-inf")
+        selected_node = None
 
-def uct(node):
-    ## will crash due to 0s on the denominator
-    ## where have i updated wins/visits in the code for this to work??
+        for child in root.children:
+            uct = calculateUCT(child)
+            if uct > bestUCT:
+                selected_node = child
+                bestUCT = uct
+
+        root = selected_node
+
+    return root
+
+def calculateUCT(node):
     c = 1
-    return (node.wins/node.visits) + c*math.sqrt(math.log(node.parent.visits)/node.visits)
+    exploitation = node.wins/node.visits
+    exploration = math.sqrt(math.log(node.parent.visits)/node.visits)
 
-def expand(root):
-    ## are we wure this root properly exists?
-    ## this base case is NOT CORRECT, also possibleMoves isnt even a thing yet
-    ## do we ever update unvisitedMoves once we've visited a move?
-    while not root.unvisitedMoves:
-        expand(root.random.choice(root.possibleMoves))
-
-    backpropagate(result, root.parent)
-
-    if not root.unvisitedMoves:
-        backpropagate(result)
+    return exploitation + c*exploration
 
 
-    # choose a random child node
-    # make a Node out of it
-    # choose another child node from there
+def expand(board, root, turn):
 
     move = random.choice(root.unvisitedMoves)
+    makeMove(board, move[0], move[1], turn)
+    child = Node(board, OPPONENTS[turn], root, move)
+    undoMove(board, move[0], move[1])
 
-    
-    possibleMoves = calculateMoves(root)
+    root.children.append(child)
+    root.unvisitedMoves.remove(move)
 
-    if not possibleMoves:
-        if checkWin(board, row ,column, turn):
-            return 1
+    return child
+
+def simulate(board, root, turn, global_turn, previous_move = None):
+
+    score = isTerminalState(board, previous_move, turn, global_turn)
+
+    if score is False:
+        if not previous_move:
+            move = random.choice(root.unvisitedMoves)
         else:
-            return 0
+            move = random.choice(calculateMoves(board))
 
-    move = random.choice(possibleMoves)
-    board = makeMove(move, board)
-    expand(board)
+        makeMove(board, move[0], move[1], turn)
+        score, turn = simulate(board, root, OPPONENTS[turn], global_turn, move)
+        undoMove(board, move[0], move[1])
+
+    return score, turn
+
+def isTerminalState(board, previous_move, turn, global_turn):
+    if not previous_move:
+        return False
+
+    mover = OPPONENTS[turn]
+    if not calculateMoves(board):
+        return 0
+
+    if checkWin(board, previous_move[0], previous_move[1], mover):
+        if mover == global_turn:
+            return 1
+        return 0
+
+    return False
+
+def backpropagate(score, node):
+    node.visits += 1
+    node.wins += score
+    if node.parent:
+        backpropagate(score, node.parent)
+
+    return
 
 def bestMove(root):
-    mostVisits = 0
-    moves = None
+    max_visits = float("-inf")
+    best_child = None
     for child in root.children:
-        if child.visits > mostVisits:
-            mostVisits = child.visits
-            move = child.move
+        if child.visits > max_visits:
+            max_visits = child.visits
+            best_child = child
 
-    return move
+    best_move = best_child.move
+    return best_move[0], best_move[1]
 
-
-
-    

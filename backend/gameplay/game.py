@@ -1,5 +1,6 @@
 
 TOKENS = {1: "꩜", 2: "⬤"}
+OPPONENTS = {1:2, 2:1}
 
 def initBoard():
     board = []
