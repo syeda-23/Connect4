@@ -1,15 +1,18 @@
 
+
 TOKENS = {1: "꩜", 2: "⬤"}
 OPPONENTS = {1:2, 2:1}
 
-def initBoard():
+def initGame():
+    turn = 1
+    count = 0
     board = []
     for row in range(6):
         r = []
         for col in range(7):
             r.append(" ")
         board.append(r)
-    return board
+    return board, turn, count
 
 def validateMove(board, column):
     row = 5
@@ -75,3 +78,23 @@ def checkWin(board, row, column, turn):
         return True
     
     return False
+
+def calculateMoves(board):
+    moves = []
+    for column in range(7):
+        row = validateMove(board, column)
+        if row != -1:
+            moves.append([int(row), int(column)])
+
+    return moves
+
+def checkGameOver(board, row, column, turn):
+    if checkWin(board, row, column, turn):
+        print("Player", turn, "won!")
+        return True
+    elif not calculateMoves(board):
+        print("Draw - Game Over")
+        return True
+    else:
+        return False
+

@@ -1,6 +1,6 @@
-from game import initBoard, validateMove, makeMove, checkWin, TOKENS
+from game import initGame, validateMove, makeMove, checkGameOver, TOKENS, OPPONENTS
 from minimax import calculateMoves, randomMove, makeMinimaxMove, alphabeta
-from mcts2 import mcts
+from mcts import mcts
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -17,130 +17,40 @@ def getMove(board):
 
 def Menu():
     mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against minimax\n4. Play against MCTS\nEnter choice: ")
-    if mode == "1":
-        playMultiplayer()
-    if mode == "2":
-        playRandomly()
-    if mode == "3":
-        depth = int(input("Enter depth for minimax to use: "))
-        playMinimax(depth)
-    if mode == "4":
-        playMCTS()
+    play(mode)
 
-def userPlay():
-    pass
+def userPlay(board, turn):
+    print("\n" + TOKENS[turn] + "'s turn")
+    row, column =  getMove(board)
+    makeMove(board, row, column, turn)
+    displayBoard(board)
+    return row, column
     
-def playMultiplayer(): 
-    turn = 1
-    count = 0
-    board = initBoard()
-    displayBoard(board)
 
-    while True:
-        print("\n" + TOKENS[turn] + "'s turn")
-        row, column = getMove(board)
-        makeMove(board, row, column, turn)
-        count += 1
-        displayBoard(board)
-
-        if checkWin(board, row, column, turn):
-            print("Player", turn, "wins!")
-            return
-
-        if count == 42:
-            print("Draw - Game Over!")
-            return
-
-        if turn == 1:
-            turn = 2
-        else:
-            turn = 1
-
-def playRandomly():
-    turn = 1
-    count = 0
-    board = initBoard()
+def play(mode):
+    board, turn, count = initGame()
     displayBoard(board)
 
     while True:
         if turn == 1:
-            print("\n" + TOKENS[turn] + "'s turn")
-            row, column =  getMove(board)
-            makeMove(board, row, column, turn)
-            count += 1
-            displayBoard(board)
-            turn = 2
+            row, column = userPlay(board, turn)
         elif turn == 2:
-            randomMove(board, turn)
+            if mode == "1":
+                row, column = userPlay(board, turn)
+            elif mode == "2":
+                row, column = randomMove(board, turn)
+            elif mode == "3":
+                depth = 3
+                row, column = makeMinimaxMove(board, depth, turn, True)
+            elif mode == "4":
+                row, column = mcts(board, 100, turn)
+
             displayBoard(board)
-            turn = 1
 
-        if checkWin(board, row, column, turn):
-            print("Player", turn, "wins!")
-            return
+        turn = OPPONENTS[turn]
 
-        elif count == 42:
-            print("Draw - Game Over!")
+        if checkGameOver(board, row, column, turn):
             return 
-
-def playMinimax(depth):
-
-    turn = 1
-    count = 0
-    board = initBoard()
-    displayBoard(board)
-
-    while True:
-        if turn == 1:
-            print("\n" + TOKENS[turn] + "'s turn")
-            row, column =  getMove(board)
-            makeMove(board, row, column, turn)
-        elif turn == 2:
-            row, column = makeMinimaxMove(board, depth, turn, True)
-
-        count += 1
-        displayBoard(board)
-        if checkWin(board, row, column, turn):
-            print("Player", turn, "wins!")
-            return
-        elif count == 42:
-            print("DRAW - Game Over!!")
-            return
-
-        if turn == 1:
-            turn = 2
-        else:
-            turn = 1
-
-def playMCTS():
-    print("MCTS")
-    turn = 1
-    count = 0
-    board = initBoard()
-    displayBoard(board)
-
-    while True:
-        if turn == 1:
-            print("\n" + TOKENS[turn] + "'s turn")
-            row, column =  getMove(board)
-            makeMove(board, row, column, turn)
-        elif turn == 2:
-            mcts(board, 100, turn)
-
-        count += 1
-        displayBoard(board)
-        if checkWin(board, row, column, turn):
-            print("Player", turn, "wins!")
-            return
-        elif count == 42:
-            print("DRAW - Game Over!!")
-            return
-
-        if turn == 1:
-            turn = 2
-        else:
-            turn = 1
-
 
 if __name__ == "__main__":
     Menu()

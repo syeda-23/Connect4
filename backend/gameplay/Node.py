@@ -1,7 +1,7 @@
 import copy
 from minimax import calculateMoves
 
-from minimax import calculateMoves
+from game import calculateMoves
 
 class Node:
     def __init__(self, board, turn, parent = None, move = None):

@@ -1,8 +1,8 @@
-from minimax import calculateMoves
+
 from Node import Node
 import math
 import random
-from game import makeMove, undoMove, checkWin, TOKENS, OPPONENTS
+from game import makeMove, undoMove, checkWin, TOKENS, OPPONENTS, calculateMoves
 
 def mcts(board, rollouts, turn):
     global_turn = turn
@@ -20,7 +20,7 @@ def mcts(board, rollouts, turn):
 
     row, column = bestMove(root)
     makeMove(board, row, column, turn)
-    return
+    return row, column
 
 def select(root):
     while root.children and not root.unvisitedMoves:

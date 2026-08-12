@@ -1,4 +1,4 @@
-from game import initBoard, validateMove, makeMove, checkWin, undoMove,TOKENS
+from game import validateMove, makeMove, checkWin, undoMove,calculateMoves, TOKENS
 import random
 
 def showBoard(board):
@@ -12,21 +12,12 @@ def boardFull(board):
         return True
     return False
 
-def calculateMoves(board):
-    moves = []
-    for column in range(7):
-        row = validateMove(board, column)
-        if row != -1:
-            moves.append([int(row), int(column)])
-
-    return moves
-
 def randomMove(board, turn):
     possibleMoves = calculateMoves(board)
     move = random.choice(possibleMoves)
     row, column = move[0], move[1]
     makeMove(board, row, column, turn)
-    return 
+    return row, column
 
 def minimax(board, depth, isMaximising, turn, nodesExplored):
 
