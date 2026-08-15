@@ -47,10 +47,10 @@ def play(mode):
 
             displayBoard(board)
 
-        turn = OPPONENTS[turn]
-
         if checkGameOver(board, row, column, turn):
             return 
+
+        turn = OPPONENTS[turn]
 
 if __name__ == "__main__":
     Menu()
