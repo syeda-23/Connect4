@@ -15,8 +15,13 @@ def mcts(board, rollouts, turn):
             node = root
 
         child = expand(board, node, node.turn)
-        score, next_turn = simulate(board, child, child.turn, global_turn)
-        backpropagate(score, child)
+        score, next_turn = simulate(child.board, child, child.turn, global_turn)
+
+        if child.turn == global_turn:
+            start_score = 1 - score
+        else:
+            start_score = score
+        backpropagate(start_score, child)
 
     row, column = bestMove(root)
     makeMove(board, row, column, turn)
@@ -79,13 +84,15 @@ def isTerminalState(board, previous_move, turn, global_turn):
         return False
 
     mover = OPPONENTS[turn]
-    if not calculateMoves(board):
-        return 0
-
+    
     if checkWin(board, previous_move[0], previous_move[1], mover):
         if mover == global_turn:
             return 1
         return 0
+
+    if not calculateMoves(board):
+        return 0
+    
 
     return False
 
@@ -93,7 +100,7 @@ def backpropagate(score, node):
     node.visits += 1
     node.wins += score
     if node.parent:
-        backpropagate(score, node.parent)
+        backpropagate(1-score, node.parent)
 
     return
 
