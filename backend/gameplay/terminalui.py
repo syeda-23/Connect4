@@ -52,26 +52,28 @@ def play(mode):
         pruning, depth, rollouts, exploration, firstTurn = getParameters()
         comparisonMode(board, turn, pruning, depth, rollouts, exploration, firstTurn)
 
-    while True:
-        if turn == 1:
-            row, column = userPlay(board, turn)
-        elif turn == 2:
-            if mode == "1":
+    else:
+
+        while True:
+            if turn == 1:
                 row, column = userPlay(board, turn)
-            elif mode == "2":
-                row, column = randomMove(board, turn)
-            elif mode == "3":
-                depth = 3
-                row, column = makeMinimaxMove(board, depth, turn, True)
-            elif mode == "4":
-                row, column = mcts(board, 100, turn)
+            elif turn == 2:
+                if mode == "1":
+                    row, column = userPlay(board, turn)
+                elif mode == "2":
+                    row, column = randomMove(board, turn)
+                elif mode == "3":
+                    depth = 3
+                    row, column = makeMinimaxMove(board, depth, turn, True)
+                elif mode == "4":
+                    row, column = mcts(board, 100, turn)
 
-            displayBoard(board)
+                displayBoard(board)
 
-        if checkGameOver(board, row, column, turn):
-            return 
+            if checkGameOver(board, row, column, turn):
+                return 
 
-        turn = OPPONENTS[turn]
+            turn = OPPONENTS[turn]
 
 if __name__ == "__main__":
     Menu()

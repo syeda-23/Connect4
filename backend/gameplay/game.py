@@ -1,6 +1,6 @@
 
 
-TOKENS = {1: "꩜", 2: "⬤"}
+TOKENS = {1: "X", 2: "⬤"}
 OPPONENTS = {1:2, 2:1}
 
 def initGame():

@@ -23,11 +23,11 @@ def minimax(board, depth, isMaximising, turn, nodesExplored):
 
     print("\n minimax(", depth, "," ,isMaximising, ",", turn, ")")
     if depth == 0 or boardFull(board):
-        print("Max depth reached at score:", evaluateBoard(board))
+        #print("Max depth reached at score:", evaluateBoard(board))
         return evaluateBoard(board), None, nodesExplored
 
     possibleMoves = calculateMoves(board)
-    print("Possible Moves:", possibleMoves)
+    #print("Possible Moves:", possibleMoves)
     bestMoves= []
     if turn == 1:
         opponent = 2
@@ -42,7 +42,7 @@ def minimax(board, depth, isMaximising, turn, nodesExplored):
             makeMove(board, row, column, turn)
             nodesExplored += 1
             if checkWin(board, row, column, turn):
-                print("Win for player", turn, "at depth", depth, "detected")
+                #print("Win for player", turn, "at depth", depth, "detected")
                 weight = 100000 + depth
                 undoMove(board, row, column)
             else:
@@ -55,7 +55,7 @@ def minimax(board, depth, isMaximising, turn, nodesExplored):
             elif weight == bestWeight:
                 bestMoves.append([row, column])
 
-        print("Returning moves", bestMoves, "score", bestWeight)
+        #("Returning moves", bestMoves, "score", bestWeight)
         
             
         return bestWeight, bestMoves, nodesExplored
@@ -63,12 +63,12 @@ def minimax(board, depth, isMaximising, turn, nodesExplored):
     else:
         bestWeight = float("inf")
         for move in possibleMoves:
-            print("Checking", move)
+            #print("Checking", move)
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
             nodesExplored += 1
             if checkWin(board, row, column, turn):
-                print("Win for player", turn, "at depth", depth, "detected")
+                #print("Win for player", turn, "at depth", depth, "detected")
                       
                 weight = -100000 - depth
                 undoMove(board, row, column)
@@ -81,7 +81,7 @@ def minimax(board, depth, isMaximising, turn, nodesExplored):
             elif weight == bestWeight:
                 bestMoves.append([row, column])
 
-        print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
+        #print("returning moves", bestMoves, "score", bestWeight, "from minimax depth", depth, "turn", turn)
 
         return bestWeight, bestMoves, nodesExplored
 
@@ -91,7 +91,7 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
         return evaluateBoard(board), None, nodesExplored
         
     possibleMoves = calculateMoves(board)
-    print("Possible Moves:", possibleMoves)
+    #print("Possible Moves:", possibleMoves)
     bestMoves= []
     if turn == 1:
         opponent = 2
@@ -101,7 +101,7 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
     if isMaximising:
             bestWeight = float("-inf")
             for move in possibleMoves:
-                print("Checking", move)
+                #print("Checking", move)
                 row, column = move[0], move[1]
                 makeMove(board, row, column, turn)
                 nodesExplored += 1
@@ -123,19 +123,19 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
                     break
                 alpha = max(alpha, bestWeight)
 
-            print("Returning moves", bestMoves, "score", bestWeight)
+            #print("Returning moves", bestMoves, "score", bestWeight)
              
             return bestWeight, bestMoves, nodesExplored
     
     else:
         bestWeight = float("inf")
         for move in possibleMoves:
-            print("Checking", move)
+            #print("Checking", move)
             row, column = move[0], move[1]
             makeMove(board, row, column, turn)
             nodesExplored += 1
             if checkWin(board, row, column, turn):
-                print("Win for player", turn, "at depth", depth, "detected")
+                #print("Win for player", turn, "at depth", depth, "detected")
                         
                 weight = -100000 - depth
                 undoMove(board, row, column)
@@ -159,7 +159,7 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
     
 
 def evaluateBoard(board):
-    weights = {"꩜":-1, "⬤":1}
+    weights = {"X":-1, "⬤":1}
     evaluationMatrix = [[3, 4, 5, 7, 5, 4, 3],
                         [4, 6, 8, 10, 8, 6, 4],
                         [5, 8, 11, 13, 11, 8, 5],
@@ -177,9 +177,10 @@ def evaluateBoard(board):
 
 def makeMinimaxMove(board, depth, turn, pruning):
     if not pruning:
-        moves, score, nodesExplored = minimax(board, depth, True, 2, 0)
+        score, moves, nodesExplored = minimax(board, depth, True, turn, 0)
     else:
-        score, moves, nodesExplored = alphabeta(board, depth, True, 2, float("-inf"), float("inf"), 0)
+        score, moves, nodesExplored = alphabeta(board, depth, True, turn, float("-inf"), float("inf"), 0)
+        print("Score", score, "moves", moves, "nodesExplored", nodesExplored)
 
     #print("Nodes explored:", nodesExplored)
     move = random.choice(moves)
