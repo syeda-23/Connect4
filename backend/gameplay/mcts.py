@@ -3,6 +3,7 @@ from Node import Node
 import math
 import random
 from game import makeMove, undoMove, checkWin, TOKENS, OPPONENTS, calculateMoves
+import copy
 
 def mcts(board, rollouts, turn):
     global_turn = turn
@@ -14,7 +15,7 @@ def mcts(board, rollouts, turn):
         else:
             node = root
 
-        child = expand(board, node, node.turn)
+        child = expand(node, node.turn)
         score, next_turn = simulate(child.board, child, child.turn, global_turn)
 
         if child.turn == global_turn:
@@ -51,12 +52,12 @@ def calculateUCT(node):
     return exploitation + c*exploration
 
 
-def expand(board, root, turn):
+def expand(root, turn):
 
     move = random.choice(root.unvisitedMoves)
-    makeMove(board, move[0], move[1], turn)
-    child = Node(board, OPPONENTS[turn], root, move)
-    undoMove(board, move[0], move[1])
+    newBoard = copy.deepcopy(root.board)
+    makeMove(newBoard, move[0], move[1], turn)
+    child = Node(newBoard, OPPONENTS[turn], root, move)
 
     root.children.append(child)
     root.unvisitedMoves.remove(move)
