@@ -7,3 +7,4 @@
 * https://medium.com/@quasimik/implementing-monte-carlo-tree-search-in-node-js-5f07595104df
 * https://medium.com/@quasimik/monte-carlo-tree-search-applied-to-letterpress-34f41c86e238
 * https://en.wikipedia.org/wiki/Monte_Carlo_tree_search
+* https://www.researchgate.net/publication/331552609_Research_on_Different_Heuristics_for_Minimax_Algorithm_Insight_from_Connect-4_Game
