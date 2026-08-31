@@ -185,4 +185,4 @@ def makeMinimaxMove(board, depth, turn, pruning):
     #print("Nodes explored:", nodesExplored)
     move = random.choice(moves)
     makeMove(board, move[0], move[1], turn)
-    return move[0], move[1]
+    return move[0], move[1], nodesExplored

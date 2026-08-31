@@ -1,7 +1,8 @@
 import time
-from game import checkGameOver, TOKENS, OPPONENTS
+from game import checkGameOver, TOKENS, OPPONENTS, initGame
 from minimax import makeMinimaxMove
 from mcts import mcts
+
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -20,7 +21,8 @@ def comparisonMode(board, turn, pruning, depth, rollouts, exploration, firstTurn
 
         start = time.time()
         if turn == 1:
-            row, column = makeMinimaxMove(board, depth, turn, pruning)
+            row, column, nodesExplored = makeMinimaxMove(board, depth, turn, pruning)
+            print("Nodes Explored:", nodesExplored)
         else:
             row, column = mcts(board, rollouts, turn)
         end = time.time()
@@ -32,3 +34,32 @@ def comparisonMode(board, turn, pruning, depth, rollouts, exploration, firstTurn
             return
         
         turn = OPPONENTS[turn]
+
+def simulateGame(choice1, choice2, p1, p2, p3, p4):
+
+    print("Parameters:", p1, p2, p3, p4)
+    
+    turns = {1: "Minimax", 2: "MCTS"}
+    board, turn, count = initGame()
+
+    while True:
+
+        if choice1 == 1:
+            row, column, nodesExplored = makeMinimaxMove(board, p2, turn, p1)
+        elif choice1 == 2:
+            row, column = mcts(board, p1, turn)
+        if checkGameOver(board, row, column, turn):
+            return 1
+
+        turn = OPPONENTS[turn]
+
+        if choice2 == 1:
+            row, column, nodesExplored = makeMinimaxMove(board, p4, turn, p3)
+        elif choice2 == 2:
+            row, column = mcts(board, p3, turn)
+
+        if checkGameOver(board, row, column, turn):
+            return 2
+            
+        turn = OPPONENTS[turn]
+

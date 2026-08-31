@@ -69,10 +69,7 @@ def simulate(board, root, turn, global_turn, previous_move = None):
     score = isTerminalState(board, previous_move, turn, global_turn)
 
     if score is False:
-        if not previous_move:
-            move = random.choice(root.unvisitedMoves)
-        else:
-            move = random.choice(calculateMoves(board))
+        move = random.choice(calculateMoves(board))
 
         makeMove(board, move[0], move[1], turn)
         score, turn = simulate(board, root, OPPONENTS[turn], global_turn, move)

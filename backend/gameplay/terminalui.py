@@ -1,7 +1,7 @@
 from game import initGame, validateMove, makeMove, checkGameOver, TOKENS, OPPONENTS
 from minimax import calculateMoves, randomMove, makeMinimaxMove, alphabeta
 from mcts import mcts
-from evaluation import comparisonMode
+from evaluation import comparisonMode, simulateGame
 
 def displayBoard(board):
     print("   0    1    2    3    4    5    6 ")
@@ -17,7 +17,9 @@ def getMove(board):
     return(row, column)
 
 def Menu():
-    mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against minimax\n4. Play against MCTS\n5. Observe MCTS vs Minimax\nEnter choice: ")
+    mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against minimax\n4. Play against MCTS\n5. Observe MCTS vs Minimax\n6. Stats mode\nEnter choice: ")
+    if mode == "6":
+        statsMode()
     play(mode)
 
 def userPlay(board, turn):
@@ -27,21 +29,40 @@ def userPlay(board, turn):
     displayBoard(board)
     return row, column
 
-def getParameters():
-    print("Welcome to comparison mode - select different parameters to compare MCTS and Minimax")
-    print("Let's begin with minimax customisations\n")
+def getParameters(mode):
+    if mode == 1:
+        pruning = input("Enable Alpha-Beta pruning (Y/N): ").lower()
+        pruning = (pruning == "y")
+        depth = int(input("Select minimax depth (1-5): "))
+        return (pruning, depth)
 
-    pruning = input("Enable Alpha-Beta pruning (Y/N): ").lower()
-    pruning = pruning == "y"
-    depth = int(input("Select minimax depth (1-5): "))
+    if mode == 2:
+        rollouts = int(input("Enter desired number of rollouts (100-1000): "))
+        exploration = int(input("Enter desired exploration factor (Default value is 1): "))
+        return (rollouts, exploration)
+    
 
-    print("\nLet's move onto MCTS customisations\n")
-    rollouts = int(input("Enter desired number of rollouts (100-1000): "))
-    exploration = int(input("Enter desired exploration factor (Default value is 1): "))
+def statsMode():
+    print("Use this mode to run a number of simulations")
+    simulations = int(input("Enter number of simulations you'd like to run: "))
+    choice1 = int(input("\nChoose settings for first player: \n1. Minimax \n2. MCTS \n3. Random"))
+    if choice1 != 3:
+        p1, p2 = getParameters(choice1)
 
-    firstTurn = int(input("Enter 1 for Minimax to play first, 2 for MCTS to make the fist move: "))
+    choice2 = int(input("\nChoose settings for second player: \n1. Minimax \n2. MCTS \n3. Random"))
+    if choice1 != 3:
+        p3, p4 = getParameters(choice1)
+    
 
-    return pruning, depth, rollouts, exploration, firstTurn
+    wins = {1:0, 2:0}
+
+    for i in range(simulations):
+        wins[simulateGame(choice1, choice2, p1, p2, p3, p4)] += 1
+
+    print("Player 1 win rate:", wins[1]/simulations)
+    print("Player 2 win rate:", wins[2]/simulations)
+
+    return 
 
 
 def play(mode):
@@ -49,7 +70,9 @@ def play(mode):
     displayBoard(board)
 
     if mode == "5":
-        pruning, depth, rollouts, exploration, firstTurn = getParameters()
+        pruning, depth = getParameters(1)
+        rollouts, exploration = getParameters(2)
+        firstTurn = int(input("Enter 1 for minimax to go first, 2 for mcts to go first: "))
         comparisonMode(board, turn, pruning, depth, rollouts, exploration, firstTurn)
 
     else:
