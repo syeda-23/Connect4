@@ -106,7 +106,7 @@ def alphabeta(board, depth, isMaximising, turn, alpha, beta, nodesExplored):
                 makeMove(board, row, column, turn)
                 nodesExplored += 1
                 if checkWin(board, row, column, turn):
-                    print("Win for player", turn, "at depth", depth, "detected")
+                    #print("Win for player", turn, "at depth", depth, "detected")
                     weight = 100000 + depth
                     undoMove(board, row, column)
                 else:
@@ -180,7 +180,7 @@ def makeMinimaxMove(board, depth, turn, pruning):
         score, moves, nodesExplored = minimax(board, depth, True, turn, 0)
     else:
         score, moves, nodesExplored = alphabeta(board, depth, True, turn, float("-inf"), float("inf"), 0)
-        print("Score", score, "moves", moves, "nodesExplored", nodesExplored)
+        #print("Score", score, "moves", moves, "nodesExplored", nodesExplored)
 
     #print("Nodes explored:", nodesExplored)
     move = random.choice(moves)

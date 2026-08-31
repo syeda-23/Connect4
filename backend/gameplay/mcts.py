@@ -8,6 +8,8 @@ import copy
 def mcts(board, rollouts, turn):
     global_turn = turn
     root = Node(board, turn)
+    
+
 
     for r in range(rollouts):
         if root.children and not root.unvisitedMoves:
@@ -15,14 +17,29 @@ def mcts(board, rollouts, turn):
         else:
             node = root
 
-        child = expand(node, node.turn)
-        score, next_turn = simulate(child.board, child, child.turn, global_turn)
+        score = isTerminalState(node.board, node.move, OPPONENTS[node.turn], global_turn)
+        if score is not False:
+            child = node
+            if child.turn == global_turn:
+                start_score = 1 - score
+            else:
+                start_score = score
+            backpropagate(start_score, child)
+            continue
 
+        child = expand(node, node.turn)
+        print("child's state is", child.board)
+        score = isTerminalState(child.board, child.move, OPPONENTS[turn], global_turn)
+        if score is False:
+            score, next_turn = simulate(child.board, child, child.turn, global_turn)
+    
         if child.turn == global_turn:
             start_score = 1 - score
         else:
             start_score = score
         backpropagate(start_score, child)
+
+    
 
     row, column = bestMove(root)
     makeMove(board, row, column, turn)

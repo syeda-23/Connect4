@@ -20,7 +20,8 @@ def Menu():
     mode = input("**MENU**\n1. Multiplayer (Human v Human)\n2. Play against computer opponent(non intelligent)\n3. Play against minimax\n4. Play against MCTS\n5. Observe MCTS vs Minimax\n6. Stats mode\nEnter choice: ")
     if mode == "6":
         statsMode()
-    play(mode)
+    else:
+        play(mode)
 
 def userPlay(board, turn):
     print("\n" + TOKENS[turn] + "'s turn")
@@ -40,18 +41,20 @@ def getParameters(mode):
         rollouts = int(input("Enter desired number of rollouts (100-1000): "))
         exploration = int(input("Enter desired exploration factor (Default value is 1): "))
         return (rollouts, exploration)
+
+    return None, None
     
 
 def statsMode():
     print("Use this mode to run a number of simulations")
     simulations = int(input("Enter number of simulations you'd like to run: "))
-    choice1 = int(input("\nChoose settings for first player: \n1. Minimax \n2. MCTS \n3. Random"))
-    if choice1 != 3:
-        p1, p2 = getParameters(choice1)
+    choice1 = int(input("\n1. Minimax \n2. MCTS \n3. Random\nChoose settings for first player: "))
+    
+    p1, p2 = getParameters(choice1)
 
-    choice2 = int(input("\nChoose settings for second player: \n1. Minimax \n2. MCTS \n3. Random"))
-    if choice1 != 3:
-        p3, p4 = getParameters(choice1)
+    choice2 = int(input("\n1. Minimax \n2. MCTS \n3. Random\nChoose settings for second player: "))
+    
+    p3, p4 = getParameters(choice2)
     
 
     wins = {1:0, 2:0}
@@ -89,7 +92,7 @@ def play(mode):
                     depth = 3
                     row, column = makeMinimaxMove(board, depth, turn, True)
                 elif mode == "4":
-                    row, column = mcts(board, 100, turn)
+                    row, column = mcts(board, 500, turn)
 
                 displayBoard(board)
 
@@ -100,3 +103,12 @@ def play(mode):
 
 if __name__ == "__main__":
     Menu()
+    '''
+    board = [['⬤', 'X', 'X', '⬤', '⬤', '⬤', 'X'], 
+             ['X', 'X', 'X', 'X', 'X', 'X', '⬤'],
+            ['⬤', '⬤', 'X', '⬤', '⬤', '⬤', 'X'], 
+            ['X', 'X', '⬤', 'X', 'X', '⬤', 'X'], 
+            ['⬤', 'X', '⬤', 'X', '⬤', '⬤', '⬤'], 
+            ['⬤', 'X', '⬤', 'X', '⬤', 'X', '⬤']]
+    print(checkGameOver(board, row, column, turn))
+    '''

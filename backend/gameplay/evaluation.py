@@ -2,6 +2,7 @@ import time
 from game import checkGameOver, TOKENS, OPPONENTS, initGame
 from minimax import makeMinimaxMove
 from mcts import mcts
+from minimax import randomMove
 
 
 def displayBoard(board):
@@ -41,14 +42,19 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
     
     turns = {1: "Minimax", 2: "MCTS"}
     board, turn, count = initGame()
+    print(board)
 
     while True:
 
         if choice1 == 1:
             row, column, nodesExplored = makeMinimaxMove(board, p2, turn, p1)
         elif choice1 == 2:
+            print("\n\n\nBOARD\n\n\n", board)
             row, column = mcts(board, p1, turn)
+        elif choice1 == 3:
+            row, column = randomMove(board, turn)
         if checkGameOver(board, row, column, turn):
+            print("Player one with params ", p1, p2, "won")
             return 1
 
         turn = OPPONENTS[turn]
@@ -56,9 +62,12 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
         if choice2 == 1:
             row, column, nodesExplored = makeMinimaxMove(board, p4, turn, p3)
         elif choice2 == 2:
+            print("\n\n\nboard\n\n\n", board)
             row, column = mcts(board, p3, turn)
-
+        elif choice2 == 3:
+            row, column = randomMove(board, turn)
         if checkGameOver(board, row, column, turn):
+            print("Player two with params ", p3, p4, "won")
             return 2
             
         turn = OPPONENTS[turn]
