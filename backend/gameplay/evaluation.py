@@ -38,11 +38,10 @@ def comparisonMode(board, turn, pruning, depth, rollouts, exploration, firstTurn
 
 def simulateGame(choice1, choice2, p1, p2, p3, p4):
 
-    print("Parameters:", p1, p2, p3, p4)
+    #print("Parameters:", p1, p2, p3, p4)
     
     turns = {1: "Minimax", 2: "MCTS"}
     board, turn, count = initGame()
-    print(board)
 
     while True:
 
@@ -54,7 +53,6 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
         elif choice1 == 3:
             row, column = randomMove(board, turn)
         if checkGameOver(board, row, column, turn):
-            print("Player one with params ", p1, p2, "won")
             return 1
 
         turn = OPPONENTS[turn]
@@ -67,8 +65,8 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
         elif choice2 == 3:
             row, column = randomMove(board, turn)
         if checkGameOver(board, row, column, turn):
-            print("Player two with params ", p3, p4, "won")
             return 2
             
         turn = OPPONENTS[turn]
+
 

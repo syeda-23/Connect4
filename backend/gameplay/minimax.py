@@ -21,7 +21,7 @@ def randomMove(board, turn):
 
 def minimax(board, depth, isMaximising, turn, nodesExplored):
 
-    print("\n minimax(", depth, "," ,isMaximising, ",", turn, ")")
+    #print("\n minimax(", depth, "," ,isMaximising, ",", turn, ")")
     if depth == 0 or boardFull(board):
         #print("Max depth reached at score:", evaluateBoard(board))
         return evaluateBoard(board), None, nodesExplored

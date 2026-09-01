@@ -60,7 +60,17 @@ def statsMode():
     wins = {1:0, 2:0}
 
     for i in range(simulations):
-        wins[simulateGame(choice1, choice2, p1, p2, p3, p4)] += 1
+        if i % 2 == 0:
+            result = simulateGame(choice1, choice2, p1, p2, p3, p4)
+            wins[result] += 1
+        else:
+            # swap who goes first, then swap the result back
+            result = simulateGame(choice2, choice1, p3, p4, p1, p2)
+            if result == 1:
+                wins[2] += 1
+            else:
+                wins[1] += 1
+        
 
     print("Player 1 win rate:", wins[1]/simulations)
     print("Player 2 win rate:", wins[2]/simulations)
