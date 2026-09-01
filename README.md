@@ -1,9 +1,9 @@
-# Comparing the minimax algorithm and MCTS (Monte Carlo Tree Search) in the context of Connect 4
+# Comparing the minimax algorithm and MCTS in the context of Connect 4
 ## What this is
 A Connect 4 terminal-based game in Python primarily developed to investigate and compare effectiveness of MCTS and the minimax algorithm. Thus, the program allows users to simulate competing AI agents: minimax with alpha-beta pruning, and Monte Carlo Tree Search with UCB1. However users can also play against each other, or an AI opponent.
 
 ## How to run
-'''python terminalui.py'''
+python terminalui.py
 
 **MENU**
 1. Multiplayer (Human v Human)
