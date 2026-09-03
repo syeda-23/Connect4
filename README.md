@@ -25,19 +25,16 @@ python terminalui.py
 I first tested the effects of varying depth and alpha-pruning within the minimax component, and varying the number of rollouts and altering the UCB1 calculation within MCTS. The effects of varying these parameters can be examined through looking at win rates of simulated games, speed of execution and in some cases, number of nodes explored within the game tree. After testing each algorithm separately, I compared both algorithms to each other. 
 
 ### Minimax
-#### Depth
-#### Alpha-Beta pruning
-#### (In progress) Heuristic evaluation functions
 
 ### MCTS
-#### Number of rollouts
-#### (In progress) Effect of varying exploration factor in UCB1 calculation
 
 ### Minimax vs MCTS
 
 ### Notes on methodology
 
 ## Future changes
+Investigate the effect of different evaluation functions on win rate (minimax)
+Investigate the effect of varying the exploration factor within the UCB1 calculation on win rate (MCTS)
 
 ## References
 * https://file.scirp.org/Html/1-9601415_90972.htm#t1
@@ -47,3 +44,4 @@ I first tested the effects of varying depth and alpha-pruning within the minimax
 * https://medium.com/@quasimik/monte-carlo-tree-search-applied-to-letterpress-34f41c86e238
 * https://en.wikipedia.org/wiki/Monte_Carlo_tree_search
 * https://www.researchgate.net/publication/331552609_Research_on_Different_Heuristics_for_Minimax_Algorithm_Insight_from_Connect-4_Game
+* https://www.researchgate.net/publication/412699289_Tactical_Precision_versus_Statistical_Exploration_An_Empirical_Study_of_Minimax_and_Monte_Carlo_Tree_Search_in_Connect_Four
