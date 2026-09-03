@@ -28,7 +28,7 @@ def mcts(board, rollouts, turn):
             continue
 
         child = expand(node, node.turn)
-        print("child's state is", child.board)
+        #print("child's state is", child.board)
         score = isTerminalState(child.board, child.move, OPPONENTS[turn], global_turn)
         if score is False:
             score, next_turn = simulate(child.board, child, child.turn, global_turn)

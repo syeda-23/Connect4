@@ -46,6 +46,10 @@ def getParameters(mode):
     
 
 def statsMode():
+    
+    
+
+
     print("Use this mode to run a number of simulations")
     simulations = int(input("Enter number of simulations you'd like to run: "))
     choice1 = int(input("\n1. Minimax \n2. MCTS \n3. Random\nChoose settings for first player: "))
@@ -58,22 +62,32 @@ def statsMode():
     
 
     wins = {1:0, 2:0}
+    times = {1:0, 2:0}
+    nodes = {1:0, 2:0}
 
     for i in range(simulations):
         if i % 2 == 0:
-            result = simulateGame(choice1, choice2, p1, p2, p3, p4)
+            result, average_times, average_nodes = simulateGame(choice1, choice2, p1, p2, p3, p4)
+            nodes[1], nodes[2] = nodes[1] + average_nodes[1], nodes[2] + average_nodes[2]
+            times[1], times[2] = times[1] + average_times[1], times[2] + average_times[2]
             wins[result] += 1
         else:
             # swap who goes first, then swap the result back
-            result = simulateGame(choice2, choice1, p3, p4, p1, p2)
+            result, average_times, average_nodes = simulateGame(choice2, choice1, p3, p4, p1, p2)
+            times[2], times[1] = times[2] + average_times[1], times[1] + average_times[2]
+            nodes[2], nodes[1] = nodes[2] + average_nodes[1], nodes[1] + average_nodes[2]
             if result == 1:
                 wins[2] += 1
             else:
                 wins[1] += 1
         
 
-    print("Player 1 win rate:", wins[1]/simulations)
-    print("Player 2 win rate:", wins[2]/simulations)
+    print("Player 1 win rate:", wins[1]/simulations, "and average time taken was", times[1]/simulations)
+    if choice1 == 1:
+        print("Average nodes explored:", nodes[1]/simulations)
+    print("Player 2 win rate:", wins[2]/simulations, "and average time taken was", times[2]/simulations)
+    if choice2 == 1:
+            print("Average nodes explored:", nodes[2]/simulations)
 
     return 
 

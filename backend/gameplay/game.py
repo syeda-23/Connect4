@@ -90,10 +90,10 @@ def calculateMoves(board):
 
 def checkGameOver(board, row, column, turn):
     if checkWin(board, row, column, turn):
-        print("Player", turn, "won!")
+        #print("Player", turn, "won!")
         return True
     elif not calculateMoves(board):
-        print("Draw - Game Over")
+        #print("Draw - Game Over")
         return True
     else:
         return False
