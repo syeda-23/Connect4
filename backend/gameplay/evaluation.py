@@ -55,7 +55,7 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
             average_nodes[1] += nodesExplored
             
         elif choice1 == 2:
-            print("\n\n\nBOARD\n\n\n", board)
+            #print("\n\n\nBOARD\n\n\n", board)
             row, column = mcts(board, p1, turn)
         elif choice1 == 3:
             row, column = randomMove(board, turn)
@@ -82,7 +82,7 @@ def simulateGame(choice1, choice2, p1, p2, p3, p4):
             row, column, nodesExplored = makeMinimaxMove(board, p4, turn, p3)
             average_nodes[2] += nodesExplored
         elif choice2 == 2:
-            print("\n\n\nboard\n\n\n", board)
+            #print("\n\n\nboard\n\n\n", board)
             row, column = mcts(board, p3, turn)
         elif choice2 == 3:
             row, column = randomMove(board, turn)
