@@ -5,7 +5,7 @@ def runTestsMCTS():
 
     results = open("results/mcts.csv", "w", newline = "")
     writer = csv.writer(results)
-    fields = ["rolllouts", "win_rate", "time_taken"]
+    fields = ["rollouts", "win_rate", "time_taken"]
     writer.writerow(fields)
 
     baseline = 500
