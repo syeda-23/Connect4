@@ -38,5 +38,45 @@ def runTestsMCTS():
 
     results.close()
 
+    import csv
+
+def runComparisons():
+    file = open("comparisons.csv", "w", newline="")
+    writer = csv.writer(file)
+    writer.writerow(["depth", "rollouts", "minimax_win_rate", "avg_minimax_time", "avg_mcts_time"])
+
+    depths = [2, 4, 6]
+    rolloutSettings = [200, 400, 600, 800]
+    gamesPerSetting = 50
+
+    for d in depths:
+        for r in rolloutSettings:
+            times = {1: 0, 2: 0}
+            wins = {1: 0, 2: 0}
+
+            for i in range(gamesPerSetting):
+                if i % 2 == 0:
+                    # player 1 = minimax(d), player 2 = MCTS(r)
+                    result, average_times, _ = simulateGame(1, 2, True, d, r, None)
+                    times[1] += average_times[1]
+                    times[2] += average_times[2]
+                    wins[result] += 1
+                else:
+                    # swap who goes first
+                    result, average_times, _ = simulateGame(2, 1, r, None, True, d)
+                    times[1] += average_times[2]
+                    times[2] += average_times[1]
+                    wins[2 if result == 1 else 1] += 1
+
+            writer.writerow([
+                d, r,
+                wins[1] / gamesPerSetting,
+                times[1] / gamesPerSetting,
+                times[2] / gamesPerSetting
+            ])
+    file.close()
+
 if __name__ == "__main__":
-    runTestsMCTS()
+    runComparisons()
+
+    
