@@ -25,6 +25,15 @@ python terminalui.py
 I first tested the effects of varying depth and alpha-pruning within the minimax component, and varying the number of rollouts and altering the UCB1 calculation within MCTS. The effects of varying these parameters can be examined through looking at win rates of simulated games, speed of execution and in some cases, number of nodes explored within the game tree. After testing each algorithm separately, I compared both algorithms to each other. 
 
 ### Minimax
+#### Effect of depth on nodes explored
+<img width="603" height="463" alt="image" src="https://github.com/user-attachments/assets/de6f6b6a-83a6-4c6a-b5d1-72d67f5b12fa" />
+
+#### Effect of depth on win rate
+<img width="626" height="472" alt="image" src="https://github.com/user-attachments/assets/d80d1dfc-3531-4bea-ad61-f8875b4d4858" />
+
+#### Effect of depth on time taken to make a move
+<img width="634" height="484" alt="image" src="https://github.com/user-attachments/assets/a9152560-065e-4b93-a852-17f6b0185b72" />
+
 
 ### MCTS
 
