@@ -27,16 +27,24 @@ I first tested the effects of varying depth and alpha-pruning within the minimax
 ### Minimax
 #### Effect of depth on nodes explored
 <img width="603" height="463" alt="image" src="https://github.com/user-attachments/assets/de6f6b6a-83a6-4c6a-b5d1-72d67f5b12fa" />
-
-#### Effect of depth on win rate
-<img width="626" height="472" alt="image" src="https://github.com/user-attachments/assets/d80d1dfc-3531-4bea-ad61-f8875b4d4858" />
+The graph depicts an exponential relationship, and we can see that increasing the depth means exponentially increasing the number of nodes.
 
 #### Effect of depth on time taken to make a move
 <img width="634" height="484" alt="image" src="https://github.com/user-attachments/assets/a9152560-065e-4b93-a852-17f6b0185b72" />
+Similarly, we can see that increasing the depth means exponentially increasing the time taken to make a move.
 
+#### Effect of depth on win rate
+<img width="626" height="472" alt="image" src="https://github.com/user-attachments/assets/d80d1dfc-3531-4bea-ad61-f8875b4d4858" />
+This result was most surprising to me. I expected win rates to be higher at higher depths, but the graph does not show such a clear pattern. 
 
 ### MCTS
+#### Effect of increasing rollouts on win rate
+<img width="574" height="465" alt="image" src="https://github.com/user-attachments/assets/7e0c2a33-02e5-4000-a088-f0daeb120484" />
 
+#### Effect of increasing rollouts on time taken to make a move
+<img width="622" height="468" alt="image" src="https://github.com/user-attachments/assets/b8831490-5a65-4109-9a24-a198ab69a7f0" />
+
+Generally, we can see that increasing rollouts results in a higher win rate, and more time taken per move. 
 ### Minimax vs MCTS
 
 ### Notes on methodology
